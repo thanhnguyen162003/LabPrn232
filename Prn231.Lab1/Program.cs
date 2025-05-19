@@ -17,6 +17,9 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+// Initialize database
+DatabaseInit.Initialize(app.Services);
+
 app.MapDefaultEndpoints();
 
 if (app.Environment.IsDevelopment())
