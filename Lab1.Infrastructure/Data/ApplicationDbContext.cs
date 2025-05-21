@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using Prn231.Lab1.Models;
+using Prn231.Lab1.Entities;
 
 namespace Prn231.Lab1.Data;
 

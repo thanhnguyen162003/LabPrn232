@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lab1.Domain\Lab1.Domain.csproj" />
+    <ProjectReference Include="..\Lab1.Infrastructure\Lab1.Infrastructure.csproj" />
     <ProjectReference Include="..\LabPrn232.ServiceDefaults\LabPrn232.ServiceDefaults.csproj" />
   </ItemGroup>
 

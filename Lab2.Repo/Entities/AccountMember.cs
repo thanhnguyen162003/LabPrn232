@@ -1,4 +1,3 @@
-using System;
 
 namespace Prn232.Lab2.Entities;
 

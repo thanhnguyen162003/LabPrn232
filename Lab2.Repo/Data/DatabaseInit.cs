@@ -1,5 +1,7 @@
 using Prn232.Lab2.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Prn232.Lab2.Data;
 
 public static class DatabaseInit
@@ -11,31 +13,13 @@ public static class DatabaseInit
         
         context.Database.EnsureCreated();
 
-        if (context.Products.Any())
+        if (!context.Products.Any())
         {
-            return;
-        }
-        var categories = new[]
-        {
-            new Category { CategoryId = 1, CategoryName = "Electronics" },
-            new Category { CategoryId = 2, CategoryName = "Clothing" },
-            new Category { CategoryId = 3, CategoryName = "Books" },
-            new Category { CategoryId = 4, CategoryName = "Furniture" },
-            new Category { CategoryId = 5, CategoryName = "Toys" }
-        };
-        var accountMembers = new[]
-        {
-            new AccountMember { MemberId = 1, MemberPassword = "password1", FullName = "John Doe", Email = "john.doe@example.com", MemberRole = "Admin" },
-            new AccountMember { MemberId = 2, MemberPassword = "password2", FullName = "Jane Smith", Email = "jane.smith@example.com", MemberRole = "User" }
-        };
-        context.Categories.AddRange(categories);
-        context.AccountMembers.AddRange(accountMembers);
-        context.SaveChanges();
-        
-        var products = new[]
-        {
-            new Product
+            
+            var products = new[]
             {
+                new Product
+                {
                 ProductName = "Laptop",
                 UnitPrice = 1200.00m,
                 UnitInStock = 10,
@@ -70,8 +54,32 @@ public static class DatabaseInit
                 CategoryId = 5
             }
         };
-
         context.Products.AddRange(products);
         context.SaveChanges();
+        }
+        if (!context.Categories.Any())
+        {
+        var categories = new[]
+        {
+            new Category { CategoryId = 1, CategoryName = "Electronics" },
+            new Category { CategoryId = 2, CategoryName = "Clothing" },
+            new Category { CategoryId = 3, CategoryName = "Books" },
+            new Category { CategoryId = 4, CategoryName = "Furniture" },
+            new Category { CategoryId = 5, CategoryName = "Toys" }
+        };
+        context.Categories.AddRange(categories);
+        context.SaveChanges();
+        }
+        if (!context.AccountMembers.Any())
+        {
+        var accountMembers = new[]
+        {
+            new AccountMember { MemberId = 1, MemberPassword = "password1", FullName = "John Doe", Email = "john.doe@example.com", MemberRole = "Admin" },
+            new AccountMember { MemberId = 2, MemberPassword = "password2", FullName = "Jane Smith", Email = "jane.smith@example.com", MemberRole = "User" }
+        };
+        
+        context.AccountMembers.AddRange(accountMembers);
+        context.SaveChanges();
+        }
     }
 }

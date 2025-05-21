@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Prn231.Lab1.Models;
+using Microsoft.Extensions.DependencyInjection;
+using Prn231.Lab1.Entities;
 
 namespace Prn231.Lab1.Data;
 

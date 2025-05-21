@@ -22,11 +22,4 @@
     <ProjectReference Include="..\LabPrn232.ServiceDefaults\LabPrn232.ServiceDefaults.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CustomEntites\" />
-    <Folder Include="Features\AccountMemberFeature\" />
-    <Folder Include="Features\CategoryFeature\" />
-    <Folder Include="Validations\" />
-  </ItemGroup>
-
 </Project>
