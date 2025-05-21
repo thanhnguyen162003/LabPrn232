@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Lab2.Repo\Lab2.Repo.csproj" />
+    <ProjectReference Include="..\Lab2.Service\Lab2.Service.csproj" />
     <ProjectReference Include="..\LabPrn232.ServiceDefaults\LabPrn232.ServiceDefaults.csproj" />
   </ItemGroup>
 
