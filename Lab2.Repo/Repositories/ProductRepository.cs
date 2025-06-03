@@ -1,7 +1,7 @@
 using Lab2.Repo.Repositories.Intefaces;
 using Microsoft.EntityFrameworkCore;
 using Prn232.Lab2.Data;
-using Prn232.Lab2.Entities;
+using Prn232.Lab2.Repo.Entities;
 
 namespace Lab2.Repo.Repositories;
 

@@ -1,6 +1,6 @@
 using System;
 
-namespace Prn232.Lab2.Entities;
+namespace Prn232.Lab2.Repo.Entities;
 
 public class Category
 {

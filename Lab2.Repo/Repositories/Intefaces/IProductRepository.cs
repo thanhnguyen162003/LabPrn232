@@ -1,5 +1,5 @@
+using Prn232.Lab2.Repo.Entities;
 using System;
-using Prn232.Lab2.Entities;
 
 namespace Lab2.Repo.Repositories.Intefaces;
 
