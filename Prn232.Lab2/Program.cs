@@ -2,9 +2,10 @@ using Lab2.Repo;
 using Lab2.Service.Features.Products;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
-using Prn232.Lab2.Entities;
+using Prn232.Lab2.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+
 
 // Add services to the container.
 builder.Services.AddControllers()
@@ -24,6 +25,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddRepository(builder.Configuration.GetConnectionString("DefaultConnection")!);
 builder.Services.AddScoped<IProductService, ProductService>();
 
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -38,5 +40,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Initialize the database
+DatabaseInit.Initialize(app.Services);
 
 app.Run();

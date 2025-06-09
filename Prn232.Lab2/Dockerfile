@@ -13,6 +13,9 @@ FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["Prn232.Lab2/Prn232.Lab2.csproj", "Prn232.Lab2/"]
+COPY ["Lab2.Repo/Lab2.Repo.csproj", "Lab2.Repo/"]
+COPY ["Lab2.Service/Lab2.Service.csproj", "Lab2.Service/"]
+COPY ["LabPrn232.ServiceDefaults/LabPrn232.ServiceDefaults.csproj", "LabPrn232.ServiceDefaults/"]
 RUN dotnet restore "./Prn232.Lab2/Prn232.Lab2.csproj"
 COPY . .
 WORKDIR "/src/Prn232.Lab2"

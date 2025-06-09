@@ -1,5 +1,5 @@
-using Prn232.Lab2.Entities;
 using Microsoft.EntityFrameworkCore;
+using Prn232.Lab2.Repo.Entities;
 namespace Prn232.Lab2.Data;
 
 public class Lab2DbContext : DbContext
