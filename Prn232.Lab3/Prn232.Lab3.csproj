@@ -14,7 +14,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Domain\Lab3.Domain.csproj" />
+    <ProjectReference Include="..\Lab3.Infrastructure\Lab3.Infrastructure.csproj" />
     <ProjectReference Include="..\LabPrn232.ServiceDefaults\LabPrn232.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+    <Folder Include="Features\" />
   </ItemGroup>
 
 </Project>
