@@ -25,4 +25,6 @@ builder.AddProject<Projects.Prn232_Lab3>("prn232-lab3")
     .WithReference(lab3db)
     .WaitFor(lab3db);
 
+builder.AddProject<Projects.SE171643_API>("se171643-api");
+
 builder.Build().Run();

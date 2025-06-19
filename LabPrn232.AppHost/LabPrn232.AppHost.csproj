@@ -20,7 +20,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Prn231.Lab1\Prn231.Lab1.csproj" />
     <ProjectReference Include="..\Prn232.Lab2\Prn232.Lab2.csproj" />
-    <ProjectReference Include="..\Prn232.Lab3\Prn232.Lab3.csproj" />
+    <ProjectReference Include="..\SE171643.API\SE171643.API.csproj" />
   </ItemGroup>
 
 </Project>

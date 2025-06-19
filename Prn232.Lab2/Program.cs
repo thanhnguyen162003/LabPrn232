@@ -23,6 +23,7 @@ builder.Services.AddSwaggerGen();
 
 // Add Repository and Service layers
 builder.Services.AddRepository(builder.Configuration.GetConnectionString("DefaultConnection")!);
+
 builder.Services.AddScoped<IProductService, ProductService>();
 
 

@@ -1,6 +1,0 @@
-@Prn232.Lab3_HostAddress = http://localhost:5081
-
-GET {{Prn232.Lab3_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
