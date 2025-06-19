@@ -1,6 +1,0 @@
-@SE171643.API_HostAddress = http://localhost:5051
-
-GET {{SE171643.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
