@@ -10,6 +10,7 @@ public static class DependencyInjection
     {
         services.AddSingleton<JwtHelper>();
         services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IHandbagService, Features.HandbagFeature.HandbagService>();
         return services;
     }
 }

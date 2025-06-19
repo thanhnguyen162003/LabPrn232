@@ -14,6 +14,7 @@ namespace SE171643.Repository
             services.AddDbContext<Summer2025HandbagDbContext>(options =>
             options.UseSqlServer(connectionString));
             services.AddScoped<ISystemAccountRepository, SystemAccountRepository>();
+            services.AddScoped<IHandbagRepository, HandbagRepository>();
             return services;
         }
     }
