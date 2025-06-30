@@ -1,0 +1,627 @@
+{
+	"info": {
+		"_postman_id": "lab2-api-tests",
+		"name": "Lab2 API Tests",
+		"description": "Comprehensive test collection for Lab2 Product API with OData support and CRUD operations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "CRUD Operations Tests",
+			"item": [
+				{
+					"name": "Create_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response contains created product\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.productId).to.be.a('number');",
+									"    pm.expect(responseJson.productName).to.eql(\"Test Product 001\");",
+									"    pm.expect(responseJson.categoryId).to.eql(1);",
+									"    pm.expect(responseJson.unitPrice).to.eql(29.99);",
+									"    pm.expect(responseJson.unitInStock).to.eql(100);",
+									"});",
+									"",
+									"// Store the created product ID for other tests",
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set(\"createdProductId\", responseJson.productId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productName\": \"Test Product 001\",\n    \"categoryId\": 1,\n    \"unitPrice\": 29.99,\n    \"unitInStock\": 100\n}"
+						},
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							]
+						}
+					}
+				},
+				{
+					"name": "GetById_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains product details\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.productId).to.be.a('number');",
+									"    pm.expect(responseJson.productName).to.be.a('string');",
+									"    pm.expect(responseJson.categoryId).to.be.a('number');",
+									"    pm.expect(responseJson.unitPrice).to.be.a('number');",
+									"    pm.expect(responseJson.unitInStock).to.be.a('number');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products/{{createdProductId}}",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products",
+								"{{createdProductId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "GetListOData_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Array contains product objects\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    if (responseJson.length > 0) {",
+									"        pm.expect(responseJson[0]).to.have.property('productId');",
+									"        pm.expect(responseJson[0]).to.have.property('productName');",
+									"        pm.expect(responseJson[0]).to.have.property('categoryId');",
+									"        pm.expect(responseJson[0]).to.have.property('unitPrice');",
+									"        pm.expect(responseJson[0]).to.have.property('unitInStock');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": {{createdProductId}},\n    \"productName\": \"Updated Test Product 001\",\n    \"categoryId\": 1,\n    \"unitPrice\": 39.99,\n    \"unitInStock\": 150\n}"
+						},
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products/{{createdProductId}}",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products",
+								"{{createdProductId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "Delete_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", function () {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products/{{createdProductId}}",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products",
+								"{{createdProductId}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "OData Query Tests",
+			"item": [
+				{
+					"name": "OData Filter - By Product Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products?$filter=productName eq 'Test Product'",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "productName eq 'Test Product'"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "OData Filter - By Price Range",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products?$filter=unitPrice gt 20 and unitPrice lt 50",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							],
+							"query": [
+								{
+									"key": "$filter",
+									"value": "unitPrice gt 20 and unitPrice lt 50"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "OData Select - Specific Fields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains only selected fields\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    if (responseJson.length > 0) {",
+									"        pm.expect(responseJson[0]).to.have.property('productId');",
+									"        pm.expect(responseJson[0]).to.have.property('productName');",
+									"        pm.expect(responseJson[0]).to.not.have.property('categoryId');",
+									"        pm.expect(responseJson[0]).to.not.have.property('unitPrice');",
+									"        pm.expect(responseJson[0]).to.not.have.property('unitInStock');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products?$select=productId,productName",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							],
+							"query": [
+								{
+									"key": "$select",
+									"value": "productId,productName"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "OData OrderBy - Sort by Price",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products?$orderby=unitPrice desc",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							],
+							"query": [
+								{
+									"key": "$orderby",
+									"value": "unitPrice desc"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "OData Top - Limit Results",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has limited results\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"    pm.expect(responseJson.length).to.be.at.most(5);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products?$top=5",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							],
+							"query": [
+								{
+									"key": "$top",
+									"value": "5"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "OData Count - Get Total Count",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains count\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.have.property('@odata.count');",
+									"    pm.expect(responseJson['@odata.count']).to.be.a('number');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products?$count=true",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							],
+							"query": [
+								{
+									"key": "$count",
+									"value": "true"
+								}
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Error Handling Tests",
+			"item": [
+				{
+					"name": "GetById_NotFound",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 404\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products/99999",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products",
+								"99999"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update_BadRequest - ID Mismatch",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productId\": 1,\n    \"productName\": \"Mismatch Product\",\n    \"categoryId\": 1,\n    \"unitPrice\": 29.99,\n    \"unitInStock\": 100\n}"
+						},
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products/2",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products",
+								"2"
+							]
+						}
+					}
+				},
+				{
+					"name": "Create_BadRequest - Invalid Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"productName\": \"\",\n    \"categoryId\": -1,\n    \"unitPrice\": -10,\n    \"unitInStock\": -5\n}"
+						},
+						"url": {
+							"raw": "{{lab2BaseUrl}}/odata/products",
+							"host": [
+								"{{lab2BaseUrl}}"
+							],
+							"path": [
+								"odata",
+								"products"
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "lab2BaseUrl",
+			"value": "https://localhost:7194",
+			"type": "string"
+		}
+	]
+} 

@@ -1,0 +1,882 @@
+{
+	"info": {
+		"_postman_id": "se171643-api-tests",
+		"name": "SE171643 API Tests",
+		"description": "Comprehensive test collection for SE171643 Handbag API including authentication, CRUD operations, and authorization tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication Tests",
+			"item": [
+				{
+					"name": "Login_Failed - Invalid Credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 401\", function () {",
+									"    pm.response.to.have.status(401);",
+									"});",
+									"",
+									"pm.test(\"Response has error code HB40101\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.errorCode).to.eql(\"HB40101\");",
+									"    pm.expect(responseJson.errorMessage).to.include(\"Invalid email or password\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"invalid@email.com\",\n    \"password\": \"wrongpassword\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login_Failed - Empty Credentials",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"pm.test(\"Response has error code HB40001\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.errorCode).to.eql(\"HB40001\");",
+									"    pm.expect(responseJson.errorMessage).to.include(\"Email and password are required\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"\",\n    \"password\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login_Pass - Valid Administrator",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains token and role\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.token).to.be.a('string');",
+									"    pm.expect(responseJson.role).to.eql(\"administrator\");",
+									"    pm.expect(responseJson.token).to.not.be.empty;",
+									"});",
+									"",
+									"// Store the token for other tests",
+									"if (pm.response.code === 200) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set(\"adminToken\", responseJson.token);",
+									"    pm.environment.set(\"adminRole\", responseJson.role);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"admin@handbagasian.org\",\n    \"password\": \"@1\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					}
+				},
+				{
+					"name": "Login_Pass - Valid Member",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains token and role\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.token).to.be.a('string');",
+									"    pm.expect(responseJson.role).to.eql(\"member\");",
+									"    pm.expect(responseJson.token).to.not.be.empty;",
+									"});",
+									"",
+									"// Store the token for other tests",
+									"if (pm.response.code === 200) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set(\"memberToken\", responseJson.token);",
+									"    pm.environment.set(\"memberRole\", responseJson.role);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"steve@handbagasian.org\",\n    \"password\": \"@1\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/auth",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"auth"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "CRUD Operations Tests",
+			"item": [
+				{
+					"name": "Create_Success - Administrator",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.test(\"Response contains created handbag\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.handbagId).to.be.a('number');",
+									"    pm.expect(responseJson.modelName).to.eql(\"LUXURY BAG 001\");",
+									"    pm.expect(responseJson.material).to.eql(\"Leather\");",
+									"    pm.expect(responseJson.price).to.eql(299.99);",
+									"    pm.expect(responseJson.stock).to.eql(50);",
+									"    pm.expect(responseJson.brandId).to.eql(1);",
+									"});",
+									"",
+									"// Store the created handbag ID for other tests",
+									"if (pm.response.code === 201) {",
+									"    const responseJson = pm.response.json();",
+									"    pm.environment.set(\"createdHandbagId\", responseJson.handbagId);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"modelName\": \"LUXURY BAG 001\",\n    \"material\": \"Leather\",\n    \"price\": 299.99,\n    \"stock\": 50,\n    \"brandId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/handbags",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"handbags"
+							]
+						}
+					}
+				},
+				{
+					"name": "GetById_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains handbag details\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.handbagId).to.be.a('number');",
+									"    pm.expect(responseJson.modelName).to.be.a('string');",
+									"    pm.expect(responseJson.material).to.be.a('string');",
+									"    pm.expect(responseJson.price).to.be.a('number');",
+									"    pm.expect(responseJson.stock).to.be.a('number');",
+									"    pm.expect(responseJson.brandId).to.be.a('number');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/handbags/{{createdHandbagId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"handbags",
+								"{{createdHandbagId}}"
+							]
+						}
+					}
+				},
+				{
+					"name": "GetListOData_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"});",
+									"",
+									"pm.test(\"Array contains handbag objects\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    if (responseJson.length > 0) {",
+									"        pm.expect(responseJson[0]).to.have.property('handbagId');",
+									"        pm.expect(responseJson[0]).to.have.property('modelName');",
+									"        pm.expect(responseJson[0]).to.have.property('material');",
+									"        pm.expect(responseJson[0]).to.have.property('price');",
+									"        pm.expect(responseJson[0]).to.have.property('stock');",
+									"        pm.expect(responseJson[0]).to.have.property('brandId');",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/handbags",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"handbags"
+							]
+						}
+					}
+				},
+				{
+					"name": "Update_Success",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response contains updated handbag\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson.handbagId).to.eql(parseInt(pm.environment.get(\"createdHandbagId\")));",
+									"    pm.expect(responseJson.modelName).to.eql(\"LUXURY BAG 001 UPDATED\");",
+									"    pm.expect(responseJson.material).to.eql(\"Premium Leather\");",
+									"    pm.expect(responseJson.price).to.eql(399.99);",
+									"    pm.expect(responseJson.stock).to.eql(75);",
+									"    pm.expect(responseJson.brandId).to.eql(1);",
+									"    pm.expect(responseJson.color).to.eql(\"Black\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"modelName\": \"LUXURY BAG 001 UPDATED\",\n    \"material\": \"Premium Leather\",\n    \"price\": 399.99,\n    \"stock\": 75,\n    \"brandId\": 1,\n    \"color\": \"Black\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/handbags/{{createdHandbagId}}",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"handbags",
+								"{{createdHandbagId}}"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Authorization Tests",
+			"item": [
+				{
+					"name": "UnAuthorized_CRUD - No Token",
+					"item": [
+						{
+							"name": "Get All Handbags - No Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});",
+											"",
+											"pm.test(\"Response indicates unauthorized\", function () {",
+											"    const responseText = pm.response.text();",
+											"    pm.expect(responseText).to.include(\"Unauthorized\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/handbags",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"handbags"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get Handbag by ID - No Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{baseUrl}}/api/handbags/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"handbags",
+										"1"
+									]
+								}
+							}
+						},
+						{
+							"name": "Create Handbag - No Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"modelName\": \"TEST BAG\",\n    \"material\": \"Leather\",\n    \"price\": 199.99,\n    \"stock\": 25,\n    \"brandId\": 1\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/handbags",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"handbags"
+									]
+								}
+							}
+						},
+						{
+							"name": "Update Handbag - No Token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 401\", function () {",
+											"    pm.response.to.have.status(401);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"modelName\": \"UPDATED BAG\",\n    \"material\": \"Leather\",\n    \"price\": 299.99,\n    \"stock\": 50,\n    \"brandId\": 1\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/handbags/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"handbags",
+										"1"
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "UnAuthorized_CRUD - Member Role (Limited Access)",
+					"item": [
+						{
+							"name": "Create Handbag - Member Role (Should Fail)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});",
+											"",
+											"pm.test(\"Response indicates forbidden\", function () {",
+											"    const responseText = pm.response.text();",
+											"    pm.expect(responseText).to.include(\"Forbidden\");",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{memberToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"modelName\": \"MEMBER BAG\",\n    \"material\": \"Leather\",\n    \"price\": 199.99,\n    \"stock\": 25,\n    \"brandId\": 1\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/handbags",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"handbags"
+									]
+								}
+							}
+						},
+						{
+							"name": "Update Handbag - Member Role (Should Fail)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{memberToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"modelName\": \"MEMBER UPDATED BAG\",\n    \"material\": \"Leather\",\n    \"price\": 299.99,\n    \"stock\": 50,\n    \"brandId\": 1\n}"
+								},
+								"url": {
+									"raw": "{{baseUrl}}/api/handbags/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"handbags",
+										"1"
+									]
+								}
+							}
+						},
+						{
+							"name": "Delete Handbag - Member Role (Should Fail)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 403\", function () {",
+											"    pm.response.to.have.status(403);",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{memberToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/handbags/1",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"handbags",
+										"1"
+									]
+								}
+							}
+						},
+						{
+							"name": "Get All Handbags - Member Role (Should Pass)",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"",
+											"pm.test(\"Response is an array\", function () {",
+											"    const responseJson = pm.response.json();",
+											"    pm.expect(responseJson).to.be.an('array');",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{memberToken}}"
+									}
+								],
+								"url": {
+									"raw": "{{baseUrl}}/api/handbags",
+									"host": [
+										"{{baseUrl}}"
+									],
+									"path": [
+										"api",
+										"handbags"
+									]
+								}
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Search Tests",
+			"item": [
+				{
+					"name": "Search by Model Name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/handbags/search?modelName=LUXURY",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"handbags",
+								"search"
+							],
+							"query": [
+								{
+									"key": "modelName",
+									"value": "LUXURY"
+								}
+							]
+						}
+					}
+				},
+				{
+					"name": "Search by Material",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response is an array\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    pm.expect(responseJson).to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{adminToken}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/api/handbags/search?material=Leather",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"api",
+								"handbags",
+								"search"
+							],
+							"query": [
+								{
+									"key": "material",
+									"value": "Leather"
+								}
+							]
+						}
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://localhost:7234",
+			"type": "string"
+		}
+	]
+} 

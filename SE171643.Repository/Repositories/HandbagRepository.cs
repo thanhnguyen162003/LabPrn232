@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SE171643.Repository.Abstractions;
 using SE171643.Repository.Entities;
@@ -21,7 +18,7 @@ public class HandbagRepository(Summer2025HandbagDbContext context) : IHandbagRep
         await context.SaveChangesAsync();
         return handbag;
     }
-
+     
     public async Task<Handbag?> UpdateAsync(Handbag handbag)
     {
         var existing = await context.Handbags.FindAsync(handbag.HandbagId);
